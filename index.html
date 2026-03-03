@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XXXX</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=DM+Mono:wght@300;400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --ink: #0b0814;
+            --amethyst: #4a1e8a;
+            --amethyst-lit: #7b3fc4;
+            --gold: #c9a84c;
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-hover: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-border-hover: rgba(255, 255, 255, 0.3);
+
+            --text-primary: rgba(240, 228, 255, 0.95);
+            --text-muted: rgba(180, 155, 220, 0.55);
+
+            --radius-card: 16px;
+            --radius-icon: 10px;
+            --blur-main: 20px;
+
+            --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            cursor: none;
+        }
+
+        .cursor {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--gold);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.08s var(--ease-out);
+            mix-blend-mode: difference;
+        }
+
+        .cursor-ring {
+            position: fixed;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1px solid rgba(201, 168, 76, 0.5);
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: transform 0.22s var(--ease-out), width 0.22s, height 0.22s;
+        }
+
+        .cursor-ring.hover {
+            width: 50px;
+            height: 50px;
+            border-color: var(--gold);
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            font-family: 'DM Mono', monospace;
+            background: var(--ink);
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .bg-orbs {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--amethyst);
+            top: -20%;
+            left: -10%;
+            animation: drift 20s infinite;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: #2d0a5c;
+            bottom: -10%;
+            right: -5%;
+            animation: drift 15s infinite reverse;
+        }
+
+        @keyframes drift {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(40px, 20px);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            width: 100vw;
+            height: 100vh;
+            align-items: center;
+            padding: 0 10vw;
+            gap: 5vw;
+        }
+
+        .title-col {
+            animation: reveal-left 1s var(--ease-out) both;
+        }
+
+        @keyframes reveal-left {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .eyebrow {
+            font-size: 0.65rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 5vw, 4.5rem);
+            font-weight: 300;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        h1 em {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            max-width: 25ch;
+        }
+
+        .links-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .link-card {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            border-radius: var(--radius-card);
+            text-decoration: none;
+            color: var(--text-primary);
+            cursor: none;
+
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-main));
+            -webkit-backdrop-filter: blur(var(--blur-main));
+
+            border: 1px solid var(--glass-border);
+
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+
+            transition:
+                transform 0.4s var(--spring),
+                background 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+
+            opacity: 0;
+            animation: card-in 0.6s var(--spring) forwards;
+        }
+
+        .link-card:nth-child(1) {
+            animation-delay: 0.4s;
+        }
+
+        .link-card:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .link-card:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes card-in {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .link-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            background: var(--glass-hover);
+            border-color: var(--glass-border-hover);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .link-card:active {
+            transform: scale(0.98);
+        }
+
+        .icon-wrap {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-icon);
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.4s var(--spring), background 0.3s ease;
+        }
+
+        .link-card:hover .icon-wrap {
+            transform: rotate(-8deg);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .link-card svg {
+            width: 18px;
+            height: 18px;
+            fill: #fff;
+        }
+
+        .link-label {
+            font-size: 0.85rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+        }
+
+        .card-instagram:hover {
+            box-shadow: 0 12px 40px 0 rgba(210, 50, 120, 0.15);
+        }
+
+        .card-github:hover {
+            box-shadow: 0 12px 40px 0 rgba(30, 120, 255, 0.15);
+        }
+
+        .card-x:hover {
+            box-shadow: 0 12px 40px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-tag {
+            margin-top: 10px;
+            align-self: flex-end;
+            padding: 6px 15px;
+            border-radius: 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 0 8vw;
+                text-align: center;
+                justify-items: center;
+            }
+
+            .title-col {
+                margin-bottom: 20px;
+            }
+
+            .links-wrapper {
+                width: 100%;
+                max-width: 340px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor" id="cur"></div>
+    <div class="cursor-ring" id="ring"></div>
+
+    <div class="bg-orbs" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <div class="container">
+        <div class="title-col">
+            <span class="eyebrow">Timothy's</span>
+            <h1>Linky<br><em>Things.</em></h1>
+            <p class="subtitle">Check those out :)</p>
+        </div>
+
+        <div class="links-wrapper">
+            <a href="https://www.instagram.com/mothy.tiwow/" class="link-card card-instagram" target="_blank" rel="noopener noreferrer">
+                <div class="icon-wrap">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                    </svg>
+                </div>
+                <span class="link-label">@mothy.tiwow</span>
+            </a>
+
+            <a href="https://github.com/tiwowtimothy" class="link-card card-github" target="_blank" rel="noopener noreferrer">
+                <div class="icon-wrap">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.011-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                    </svg>
+                </div>
+                <span class="link-label">tiwowtimothy</span>
+            </a>
+
+            <a href="https://x.com/monsieur_tiwow" class="link-card card-x" target="_blank" rel="noopener noreferrer">
+                <div class="icon-wrap">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                </div>
+                <span class="link-label">@monsieur_tiwow</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const cur = document.getElementById('cur');
+        const ring = document.getElementById('ring');
+        let rx = 0, ry = 0;
+        let cx = 0, cy = 0;
+
+        document.addEventListener('mousemove', e => {
+            cx = e.clientX;
+            cy = e.clientY;
+            cur.style.left = cx + 'px';
+            cur.style.top = cy + 'px';
+        });
+
+        (function lerp() {
+            rx += (cx - rx) * 0.12;
+            ry += (cy - ry) * 0.12;
+            ring.style.left = rx + 'px';
+            ring.style.top = ry + 'px';
+            requestAnimationFrame(lerp);
+        })();
+
+        document.querySelectorAll('.link-card').forEach(el => {
+            el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+            el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+        });
+    </script>
+</body>
+
+</html>
